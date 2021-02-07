@@ -2,14 +2,18 @@
 
 namespace Conner\Likeable;
 
+use GeneaLabs\LaravelOverridableModel\Contracts\OverridableModel;
+use GeneaLabs\LaravelOverridableModel\Traits\Overridable;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 
 /**
  * @mixin \Eloquent
  * @property Likeable likeable
  */
-class LikeCounter extends Eloquent
+class LikeCounter extends Eloquent implements OverridableModel
 {
+    use Overridable;
+    
     protected $table = 'likeable_like_counters';
     public $timestamps = false;
     protected $fillable = ['likeable_id', 'likeable_type', 'count'];
