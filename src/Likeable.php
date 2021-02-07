@@ -129,7 +129,7 @@ trait Likeable
      */
     public function likes()
     {
-        return $this->morphMany(Like::class, 'likeable');
+        return $this->morphMany(Like::model(), 'likeable');
     }
 
     /**
@@ -150,7 +150,7 @@ trait Likeable
      */
     public function likeCounter()
     {
-        return $this->morphOne(LikeCounter::class, 'likeable');
+        return $this->morphOne(LikeCounter::model(), 'likeable');
     }
 
     /**
