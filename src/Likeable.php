@@ -24,7 +24,7 @@ trait Likeable
             });
         }
     }
-    
+
     /**
      * Populate the $model->likes attribute
      */
@@ -42,17 +42,19 @@ trait Likeable
         if (is_null($userId)) {
             $userId = $this->loggedInUserId();
         }
-        
+
         if ($userId) {
             $like = $this->likes()
                 ->where('user_id', '=', $userId)
                 ->first();
-    
+
             if ($like) {
                 return;
             }
-    
-            $like = new Like();
+
+
+            $likeModel = Like::model();
+            $like = new $likeModel;
             $like->user_id = $userId;
             $this->likes()->save($like);
         }
@@ -69,22 +71,22 @@ trait Likeable
         if (is_null($userId)) {
             $userId = $this->loggedInUserId();
         }
-        
+
         if ($userId) {
             $like = $this->likes()
                 ->where('user_id', '=', $userId)
                 ->first();
-    
+
             if (!$like) {
                 return;
             }
-    
+
             $like->delete();
         }
 
         $this->decrementLikeCount();
     }
-    
+
     /**
      * Has the currently logged in user already "liked" the current object
      *
@@ -96,12 +98,12 @@ trait Likeable
         if (is_null($userId)) {
             $userId = $this->loggedInUserId();
         }
-        
+
         return (bool) $this->likes()
             ->where('user_id', '=', $userId)
             ->count();
     }
-    
+
     /**
      * Should remove likes on model row delete (defaults to true)
      * public static removeLikesOnDelete = false;
@@ -112,7 +114,7 @@ trait Likeable
             ? static::$removeLikesOnDelete
             : true;
     }
-    
+
     /**
      * Delete likes related to the current record
      */
@@ -150,6 +152,7 @@ trait Likeable
      */
     public function likeCounter()
     {
+
         return $this->morphOne(LikeCounter::model(), 'likeable');
     }
 
@@ -164,7 +167,8 @@ trait Likeable
             $counter->count++;
             $counter->save();
         } else {
-            $counter = new LikeCounter;
+            $counterModel = LikeCounter::model();
+            $counter = new $counterModel;
             $counter->count = 1;
             $this->likeCounter()->save($counter);
         }
